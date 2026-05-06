@@ -18,3 +18,68 @@
 - Added mock content/navigation data in `src/lib/mock-data.ts`.
 - Updated global app metadata/theme in `src/app/layout.tsx` and `src/app/globals.css`.
 - Added external integration blueprint in `INTEGRATION_GUIDE.md` covering Neon, Netlify Functions, JWT, and email providers.
+- Installed backend dependencies `pg` and `bcryptjs` for Neon database setup and seed tasks.
+- Added database schema in `database/schema.sql` with core tables:
+  - `schools`
+  - `users`
+  - `teachers`
+  - `schedules`
+  - `substitutes`
+  - `system_contents`
+  - `password_resets`
+- Added setup script `scripts/setup-neon.mjs` to:
+  - create schema in Neon
+  - seed default school
+  - create/update super admin account
+  - seed base `system_contents`
+- Added verification script `scripts/verify-neon.mjs` to validate created tables and seeded users.
+- Executed Neon setup and verified successful creation of all required tables plus seeded `super_admin`.
+- Installed `jsonwebtoken` and implemented Netlify Functions for production data flow:
+  - `netlify/functions/public-content.js`
+  - `netlify/functions/schools.js`
+  - `netlify/functions/register.js`
+  - `netlify/functions/login.js`
+  - shared helpers in `netlify/functions/_lib/db.js` and `netlify/functions/_lib/http.js`
+- Added frontend API helper in `src/lib/api.ts` with `NEXT_PUBLIC_API_BASE` support.
+- Connected home page (`src/app/page.tsx`) to load public content from live API with fallback data.
+- Reworked login page (`src/app/login/page.tsx`) to submit credentials to API, store token, and redirect by role.
+- Reworked register page (`src/app/register/page.tsx`) to load schools from API and create teacher accounts in Neon.
+- Added `netlify.toml` for Netlify build/function configuration.
+- Added `.env.example` documenting required runtime environment variables.
+- Updated ESLint config for Netlify function CommonJS compatibility and verified lint passes.
+- Installed Netlify CLI globally and authenticated with Netlify account.
+- Linked local project to Netlify site `fantastic-cucurucho-4a58de` (project id `651fa5ed-7fd7-451e-9d30-d3cf84d992df`).
+- Confirmed Netlify project status and detected that environment variables are not configured yet on Netlify.
+- Configured Netlify environment variables in all contexts:
+  - `DATABASE_URL`
+  - `JWT_SECRET`
+  - `NEXT_PUBLIC_API_BASE`
+- Triggered production deploy on Netlify and verified successful live release.
+- Confirmed API functions are bundled and deployed (`login`, `public-content`, `register`, `schools`).
+- Reviewed visual design from reference project `teaching-schedule-webapp` and aligned UI language to match:
+  - dark cockpit background gradient + subtle grid texture
+  - glassmorphism cards with rounded large radii
+  - cyan/lime accent actions and glow-style primary buttons
+- Updated shared UI primitives in `src/components/ui.tsx` so all pages inherit consistent reference style.
+- Updated `src/app/globals.css` typography/selection behavior to mirror the reference visual system.
+- Restyled public home, login, and register pages to the same visual direction from the reference project.
+- Continued cockpit-style refactor for dashboard pages:
+  - Upgraded `src/app/teacher-dashboard/page.tsx` with responsive weekly timetable (desktop grid + mobile day cards) and KPI summary cards.
+  - Upgraded `src/app/admin-dashboard/page.tsx` with admin KPI summary cards and updated visual hierarchy.
+  - Upgraded `src/app/super-dashboard/page.tsx` with system KPI summary cards and aligned panel styling.
+- Added core authentication and security backend utilities:
+  - `netlify/functions/_lib/auth.js` for JWT bearer verification.
+  - `netlify/functions/profile.js` for session/profile validation.
+- Implemented missing production API endpoints:
+  - `request-substitute`
+  - `change-password`
+  - `forgot-password`
+  - `reset-password`
+- Added frontend auth/session layer in `src/lib/auth-client.ts` and applied role guards to teacher/admin/super dashboards.
+- Enhanced teacher dashboard with real API submissions for substitute requests and password changes.
+- Connected forgot/reset password pages to live API flow and token-based reset handling.
+- Extended `.env.example` with `PUBLIC_APP_URL` for reset-link generation.
+- Updated ESLint ignore rules for `.netlify/**` generated artifacts.
+- Verified code quality and production readiness with successful `npm run lint` and `npm run build`.
+- Set Netlify environment variable `PUBLIC_APP_URL` to production domain.
+- Attempted production deploy twice; build and function bundling succeeded, but deployment upload failed with Netlify blob-store `401` (platform/authorization-side deploy upload issue).

@@ -13,11 +13,11 @@ type CardProps = {
 export function GlassCard({ title, subtitle, children, className = "" }: CardProps) {
   return (
     <section
-      className={`rounded-3xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-xl ${className}`}
+      className={`rounded-[2rem] border border-white/12 bg-white/[0.07] p-6 shadow-[0_24px_70px_rgba(0,0,0,.28)] backdrop-blur-2xl ${className}`}
     >
       <header className="mb-4">
-        <h2 className="text-lg font-semibold text-white">{title}</h2>
-        {subtitle ? <p className="text-sm text-white/70">{subtitle}</p> : null}
+        <h2 className="text-lg font-semibold text-white sm:text-xl">{title}</h2>
+        {subtitle ? <p className="text-sm text-slate-300/90">{subtitle}</p> : null}
       </header>
       {children}
     </section>
@@ -33,13 +33,13 @@ type ButtonLinkProps = {
 export function ButtonLink({ href, label, variant = "primary" }: ButtonLinkProps) {
   const styles =
     variant === "primary"
-      ? "bg-cyan-400 text-slate-950 hover:bg-cyan-300"
-      : "border border-white/30 text-white hover:bg-white/10";
+      ? "bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,.35)] hover:bg-lime-300"
+      : "border border-white/20 bg-white/[0.04] text-white hover:border-cyan-300/50 hover:bg-white/[0.1]";
 
   return (
     <Link
       href={href}
-      className={`inline-flex items-center justify-center rounded-xl px-4 py-2 text-sm font-semibold transition ${styles}`}
+      className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition ${styles}`}
     >
       {label}
     </Link>
@@ -54,12 +54,12 @@ type InputProps = {
 
 export function InputField({ label, type = "text", placeholder }: InputProps) {
   return (
-    <label className="flex flex-col gap-2 text-sm text-white/80">
+    <label className="flex flex-col gap-2 text-sm text-slate-200">
       {label}
       <input
         type={type}
         placeholder={placeholder}
-        className="rounded-xl border border-white/20 bg-slate-900/70 px-4 py-3 text-white outline-none transition focus:border-cyan-300"
+        className="rounded-2xl border border-white/12 bg-slate-950/30 px-4 py-3 text-white outline-none transition placeholder:text-slate-500 focus:border-cyan-300/60"
       />
     </label>
   );
@@ -69,23 +69,36 @@ type DashLayoutProps = {
   title: string;
   role: string;
   nav: { label: string; href: string }[];
+  userName?: string;
+  onLogout?: () => void;
   children: ReactNode;
 };
 
-export function DashboardLayout({ title, role, nav, children }: DashLayoutProps) {
+export function DashboardLayout({ title, role, nav, userName, onLogout, children }: DashLayoutProps) {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_10%_20%,#1e293b_0%,#020617_45%)] p-4 text-white md:p-8">
-      <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-[260px_1fr]">
-        <aside className="rounded-3xl border border-white/20 bg-white/10 p-4 backdrop-blur-xl">
-          <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">Timetabling System</p>
+    <main className="relative min-h-screen overflow-hidden bg-[#06111f] p-4 text-white md:p-8">
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_15%_10%,rgba(34,211,238,.22),transparent_30%),radial-gradient(circle_at_85%_20%,rgba(132,204,22,.14),transparent_28%),linear-gradient(135deg,#06111f_0%,#0b1730_48%,#101827_100%)]" />
+      <div className="pointer-events-none absolute inset-0 -z-10 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,.18)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.18)_1px,transparent_1px)] [background-size:42px_42px]" />
+      <div className="mx-auto grid max-w-7xl gap-4 md:grid-cols-[280px_1fr]">
+        <aside className="rounded-[2rem] border border-white/12 bg-white/[0.07] p-5 backdrop-blur-2xl">
+          <p className="text-xs uppercase tracking-[0.25em] text-cyan-200">Timetabling System</p>
           <h1 className="mt-2 text-xl font-bold">{title}</h1>
-          <p className="mb-4 text-sm text-white/70">{role}</p>
+          <p className="mb-4 text-sm text-slate-300/90">{role}</p>
+          {userName ? <p className="mb-3 text-xs text-cyan-100/80">ผู้ใช้งาน: {userName}</p> : null}
+          {onLogout ? (
+            <button
+              onClick={onLogout}
+              className="mb-4 w-full rounded-full border border-white/20 bg-white/[0.04] px-3 py-2 text-sm transition hover:border-cyan-300/50 hover:bg-white/[0.1]"
+            >
+              ออกจากระบบ
+            </button>
+          ) : null}
           <nav className="grid gap-2">
             {nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-lg px-3 py-2 text-sm transition hover:bg-white/15"
+                className="rounded-2xl border border-transparent bg-white/[0.02] px-3 py-2 text-sm transition hover:border-cyan-300/40 hover:bg-white/[0.08]"
               >
                 {item.label}
               </Link>
