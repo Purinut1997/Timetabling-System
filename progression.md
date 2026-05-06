@@ -89,3 +89,8 @@
   - role workspace cards
   - richer icon-driven sections and footer style
 - Added `lucide-react` dependency for parity with reference iconography.
+- Implemented modern popup authentication flow on homepage:
+  - Added reusable modal component `src/components/auth-popup.tsx`.
+  - Converted homepage login/register actions to open popup instead of redirecting to standalone pages.
+  - Connected popup login/register forms to live API endpoints with role-based redirect after login.
+- Enhanced popup visuals to modern futuristic glass style with tab switching, neon accents, blur backdrop, and inline feedback states.

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
 import { publicContent } from "@/lib/mock-data";
+import { AuthPopup } from "@/components/auth-popup";
 
 const announcements = [
   { title: "เปิดใช้งานระบบตารางสอนออนไลน์", detail: "ครูสามารถตรวจตารางสอนรายสัปดาห์และรายการสอนแทนได้จากทุกอุปกรณ์", date: "6 พ.ค. 2569" },
@@ -33,6 +34,10 @@ const announcements = [
 
 export default function Home() {
   const [content, setContent] = useState(publicContent);
+  const [authPopup, setAuthPopup] = useState<{ open: boolean; mode: "login" | "register" }>({
+    open: false,
+    mode: "login",
+  });
 
   useEffect(() => {
     apiFetch<{ home_announcement?: string; contact_info?: string; privacy_policy?: string }>("public-content")
@@ -71,8 +76,18 @@ export default function Home() {
             <a href="#contact" className="transition hover:text-cyan-200">ติดต่อ</a>
           </div>
           <div className="hidden items-center gap-3 md:flex">
-            <Link href="/login" className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-300/60 hover:bg-cyan-300/10">เข้าสู่ระบบ</Link>
-            <Link href="/register" className="rounded-full bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_0_24px_rgba(34,211,238,.35)] transition hover:bg-lime-300">สมัครสมาชิก</Link>
+            <button
+              onClick={() => setAuthPopup({ open: true, mode: "login" })}
+              className="rounded-full border border-white/15 px-4 py-2 text-sm text-slate-100 transition hover:border-cyan-300/60 hover:bg-cyan-300/10"
+            >
+              เข้าสู่ระบบ
+            </button>
+            <button
+              onClick={() => setAuthPopup({ open: true, mode: "register" })}
+              className="rounded-full bg-cyan-300 px-4 py-2 text-sm font-semibold text-slate-950 shadow-[0_0_24px_rgba(34,211,238,.35)] transition hover:bg-lime-300"
+            >
+              สมัครสมาชิก
+            </button>
           </div>
         </nav>
       </header>
@@ -90,9 +105,12 @@ export default function Home() {
             <a href="#dashboard" className="group inline-flex items-center justify-center gap-2 rounded-full bg-cyan-300 px-6 py-3 font-semibold text-slate-950 shadow-[0_0_36px_rgba(34,211,238,.36)] transition hover:bg-lime-300">
               ดูแดชบอร์ดตัวอย่าง <ChevronRight className="h-5 w-5 transition group-hover:translate-x-1" />
             </a>
-            <Link href="/login" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-3 font-semibold text-white backdrop-blur-xl transition hover:border-cyan-300/50 hover:bg-white/12">
+            <button
+              onClick={() => setAuthPopup({ open: true, mode: "login" })}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-3 font-semibold text-white backdrop-blur-xl transition hover:border-cyan-300/50 hover:bg-white/12"
+            >
               <LockKeyhole className="h-5 w-5" /> เข้าสู่ระบบ
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -188,6 +206,12 @@ export default function Home() {
           </div>
         </div>
       </footer>
+      <AuthPopup
+        key={`${authPopup.open}-${authPopup.mode}`}
+        isOpen={authPopup.open}
+        initialMode={authPopup.mode}
+        onClose={() => setAuthPopup((prev) => ({ ...prev, open: false }))}
+      />
     </main>
   );
 }
