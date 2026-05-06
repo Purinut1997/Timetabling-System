@@ -83,3 +83,9 @@
 - Verified code quality and production readiness with successful `npm run lint` and `npm run build`.
 - Set Netlify environment variable `PUBLIC_APP_URL` to production domain.
 - Attempted production deploy twice; build and function bundling succeeded, but deployment upload failed with Netlify blob-store `401` (platform/authorization-side deploy upload issue).
+- Rebuilt `src/app/page.tsx` to match `teaching-schedule-webapp` visual structure as closely as possible:
+  - cockpit-style hero section
+  - glassmorphism announcement and feature blocks
+  - role workspace cards
+  - richer icon-driven sections and footer style
+- Added `lucide-react` dependency for parity with reference iconography.
