@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { DashboardLayout, GlassCard, InputField } from "@/components/ui";
+import { Modal } from "@/components/modal";
 import { logout, useRequireRole } from "@/lib/auth-client";
 import { superNav } from "@/lib/mock-data";
 import { schoolsAPI, usersAPI, contentAPI, reportsAPI, settingsAPI } from "@/lib/super-api";
@@ -241,72 +242,75 @@ function SchoolsManagement() {
         </button>
       </div>
 
-      {showAddForm && (
-        <GlassCard title="เพิ่มโรงเรียนใหม่">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อโรงเรียน *</label>
-              <input
-                type="text"
-                required
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
-                placeholder="กรุณากรอกชื่อโรงเรียน"
-              />
+      <Modal 
+        isOpen={showAddForm} 
+        onClose={() => setShowAddForm(false)}
+        title="เพิ่มโรงเรียนใหม่"
+        size="md"
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อโรงเรียน *</label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+              placeholder="กรุณากรอกชื่อโรงเรียน"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">ที่อยู่ *</label>
+            <textarea
+              required
+              value={formData.address}
+              onChange={(e) => setFormData({...formData, address: e.target.value})}
+              className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all resize-none"
+              placeholder="กรุณากรอกที่อยู่"
+              rows={3}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">อีเมลติดต่อ *</label>
+            <input
+              type="email"
+              required
+              value={formData.contact_email}
+              onChange={(e) => setFormData({...formData, contact_email: e.target.value})}
+              className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+              placeholder="กรุณากรอกอีเมลติดต่อ"
+            />
+          </div>
+          
+          {message && (
+            <div className={`p-4 rounded-xl text-sm ${
+              message.includes('สำเร็จ') 
+                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                : 'bg-red-500/20 text-red-400 border border-red-500/30'
+            }`}>
+              {message}
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">ที่อยู่ *</label>
-              <input
-                type="text"
-                required
-                value={formData.address}
-                onChange={(e) => setFormData({...formData, address: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
-                placeholder="กรุณากรอกที่อยู่"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">อีเมลติดต่อ *</label>
-              <input
-                type="email"
-                required
-                value={formData.contact_email}
-                onChange={(e) => setFormData({...formData, contact_email: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
-                placeholder="กรุณากรอกอีเมลติดต่อ"
-              />
-            </div>
-            
-            {message && (
-              <div className={`p-3 rounded-lg text-sm ${
-                message.includes('สำเร็จ') 
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
-              }`}>
-                {message}
-              </div>
-            )}
+          )}
 
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowAddForm(false)}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-              >
-                ยกเลิก
-              </button>
-            </div>
-          </form>
-        </GlassCard>
-      )}
+          <div className="flex gap-3 pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-cyan-500/25"
+            >
+              {loading ? 'กำลังบันทึก...' : 'บันทึก'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium transition-all duration-200"
+            >
+              ยกเลิก
+            </button>
+          </div>
+        </form>
+      </Modal>
       
       <div className="grid gap-3">
         {/* TODO: Add schools list */}
@@ -374,9 +378,14 @@ function UsersManagement() {
         </button>
       </div>
 
-      {showAddForm && (
-        <GlassCard title="เพิ่มผู้ใช้ใหม่">
-          <form onSubmit={handleSubmit} className="space-y-4">
+      <Modal 
+        isOpen={showAddForm} 
+        onClose={() => setShowAddForm(false)}
+        title="เพิ่มผู้ใช้ใหม่"
+        size="lg"
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อ-นามสกุล *</label>
               <input
@@ -384,7 +393,7 @@ function UsersManagement() {
                 required
                 value={formData.full_name}
                 onChange={(e) => setFormData({...formData, full_name: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
                 placeholder="กรุณากรอกชื่อ-นามสกุล"
               />
             </div>
@@ -395,10 +404,13 @@ function UsersManagement() {
                 required
                 value={formData.email}
                 onChange={(e) => setFormData({...formData, email: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
                 placeholder="กรุณากรอกอีเมล"
               />
             </div>
+          </div>
+          
+          <div className="grid gap-4 md:grid-cols-2">
             <div>
               <label className="block text-sm font-medium text-slate-300 mb-2">รหัสผ่าน *</label>
               <input
@@ -406,7 +418,7 @@ function UsersManagement() {
                 required
                 value={formData.password}
                 onChange={(e) => setFormData({...formData, password: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
                 placeholder="กรุณากรอกรหัสผ่าน"
               />
             </div>
@@ -415,54 +427,55 @@ function UsersManagement() {
               <select
                 value={formData.role}
                 onChange={(e) => setFormData({...formData, role: e.target.value})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
               >
                 <option value="teacher">ครู</option>
                 <option value="school_admin">ผู้ดูแลโรงเรียน</option>
                 <option value="super_admin">Super Admin</option>
               </select>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">โรงเรียน *</label>
-              <select
-                value={formData.school_id}
-                onChange={(e) => setFormData({...formData, school_id: parseInt(e.target.value)})}
-                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
-              >
-                <option value={1}>Default Demo School</option>
-                {/* TODO: Load schools from API */}
-              </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-slate-300 mb-2">โรงเรียน *</label>
+            <select
+              value={formData.school_id}
+              onChange={(e) => setFormData({...formData, school_id: parseInt(e.target.value)})}
+              className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white focus:outline-none focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+            >
+              <option value={1}>Default Demo School</option>
+              {/* TODO: Load schools from API */}
+            </select>
+          </div>
+          
+          {message && (
+            <div className={`p-4 rounded-xl text-sm ${
+              message.includes('สำเร็จ') 
+                ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                : 'bg-red-500/20 text-red-400 border border-red-500/30'
+            }`}>
+              {message}
             </div>
-            
-            {message && (
-              <div className={`p-3 rounded-lg text-sm ${
-                message.includes('สำเร็จ') 
-                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
-                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
-              }`}>
-                {message}
-              </div>
-            )}
+          )}
 
-            <div className="flex gap-2">
-              <button
-                type="submit"
-                disabled={loading}
-                className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowAddForm(false)}
-                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
-              >
-                ยกเลิก
-              </button>
-            </div>
-          </form>
-        </GlassCard>
-      )}
+          <div className="flex gap-3 pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex-1 px-6 py-3 bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 hover:to-cyan-700 text-white rounded-xl font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-cyan-500/25"
+            >
+              {loading ? 'กำลังบันทึก...' : 'บันทึก'}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-xl font-medium transition-all duration-200"
+            >
+              ยกเลิก
+            </button>
+          </div>
+        </form>
+      </Modal>
       
       <div className="grid gap-3">
         {/* TODO: Add users list */}
