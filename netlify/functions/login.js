@@ -22,7 +22,7 @@ exports.handler = async (event) => {
   }
 
   const identity = String(email).trim().toLowerCase();
-  const lookupEmail = identity === "admin" ? "admin@timetabling.local" : identity;
+  const lookupEmail = identity;
 
   try {
     const result = await query(

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { ReactNode } from "react";
 
 type CardProps = {
-  title: string;
+  title?: string;
   subtitle?: string;
   children: ReactNode;
   className?: string;
@@ -15,10 +15,12 @@ export function GlassCard({ title, subtitle, children, className = "" }: CardPro
     <section
       className={`rounded-[2rem] border border-white/12 bg-white/[0.07] p-6 shadow-[0_24px_70px_rgba(0,0,0,.28)] backdrop-blur-2xl ${className}`}
     >
-      <header className="mb-4">
-        <h2 className="text-lg font-semibold text-white sm:text-xl">{title}</h2>
-        {subtitle ? <p className="text-sm text-slate-300/90">{subtitle}</p> : null}
-      </header>
+      {title && (
+        <header className="mb-4">
+          <h2 className="text-lg font-semibold text-white sm:text-xl">{title}</h2>
+          {subtitle ? <p className="text-sm text-slate-300/90">{subtitle}</p> : null}
+        </header>
+      )}
       {children}
     </section>
   );
