@@ -21,7 +21,7 @@ export default function AdminDashboardPage() {
       userName={user?.full_name}
       onLogout={() => {
         logout();
-        router.push("/login");
+        router.replace("/");
       }}
     >
       <section className="grid gap-4 md:grid-cols-4">

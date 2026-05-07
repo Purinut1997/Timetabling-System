@@ -80,7 +80,7 @@ export default function TeacherDashboardPage() {
 
   const onLogout = () => {
     logout();
-    router.push("/login");
+    router.replace("/");
   };
 
   if (loading) {

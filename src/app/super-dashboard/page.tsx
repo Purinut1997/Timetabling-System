@@ -57,7 +57,7 @@ export default function SuperDashboardPage() {
       userName={user?.full_name}
       onLogout={() => {
         logout();
-        router.push("/login");
+        router.replace("/");
       }}
     >
       <div className="mb-8">

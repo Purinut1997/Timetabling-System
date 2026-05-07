@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 
 type CardProps = {
@@ -33,14 +34,21 @@ type ButtonLinkProps = {
 };
 
 export function ButtonLink({ href, label, variant = "primary" }: ButtonLinkProps) {
+  const router = useRouter();
   const styles =
     variant === "primary"
       ? "bg-cyan-300 text-slate-950 shadow-[0_0_24px_rgba(34,211,238,.35)] hover:bg-lime-300"
       : "border border-white/20 bg-white/[0.04] text-white hover:border-cyan-300/50 hover:bg-white/[0.1]";
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    router.replace(href);
+  };
+
   return (
     <Link
       href={href}
+      onClick={handleClick}
       className={`inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition ${styles}`}
     >
       {label}
