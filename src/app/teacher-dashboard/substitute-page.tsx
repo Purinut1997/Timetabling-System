@@ -286,8 +286,8 @@ export default function SubstitutePage() {
               <GlassCard>
                 <div className="text-center py-12 text-slate-400">
                   <AlertCircle className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                  <p className="text-xl mb-2">ไม่พบคำขอสอนแทน</p>
-                  <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือสร้างคำขอใหม่</p>
+                  <p className="text-xl mb-2">ไม่พบคำร้องขอสอนแทน</p>
+                  <p>ลองปรับเปลี่ยนเงื่อนไขการค้นหาหรือสร้างคำร้องขอใหม่</p>
                 </div>
               </GlassCard>
             ) : (
@@ -317,7 +317,7 @@ export default function SubstitutePage() {
                       </div>
                       
                       <div className="mb-3">
-                        <p className="text-sm text-slate-300 mb-1">วิชา:</p>
+                        <p className="text-sm text-slate-300 mb-1">รายวิชา:</p>
                         <p className="text-white">{request.subject}</p>
                       </div>
                       
