@@ -53,7 +53,7 @@ export default function SuperDashboardPage() {
     <DashboardLayout
       title="Super Admin Dashboard"
       role="role: super_admin"
-      nav={superNav}
+      nav={[]} // ไม่แสดงเมนูด้านข้างเนื่องจากมี tabs อยู่แล้ว
       userName={user?.full_name}
       onLogout={() => {
         logout();
