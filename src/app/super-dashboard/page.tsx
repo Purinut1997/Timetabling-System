@@ -206,7 +206,22 @@ function SchoolsManagement() {
             className="px-3 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
           />
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors">
+        <button 
+          onClick={() => {
+            // สร้าง popup หรือ form สำหรับเพิ่มโรงเรียน
+            const schoolName = prompt('กรุณากรอกชื่อโรงเรียน:');
+            if (schoolName) {
+              const address = prompt('กรุณากรอกที่อยู่:') || '';
+              const contactEmail = prompt('กรุณากรอกอีเมลติดต่อ:') || '';
+              
+              if (contactEmail) {
+                // TODO: เรียก API เพิ่มโรงเรียนจริง
+                alert(`เพิ่มโรงเรียน "${schoolName}" สำเร็จแล้ว!\nที่อยู่: ${address}\nอีเมล: ${contactEmail}`);
+              }
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
+        >
           <Plus className="w-4 h-4" />
           <span>เพิ่มโรงเรียน</span>
         </button>
@@ -241,7 +256,23 @@ function UsersManagement() {
           <Filter className="w-4 h-4" />
           <span>กรอง</span>
         </button>
-        <button className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors">
+        <button 
+          onClick={() => {
+            // สร้าง popup หรือ form สำหรับเพิ่มผู้ใช้
+            const fullName = prompt('กรุณากรอกชื่อ-นามสกุล:');
+            if (fullName) {
+              const email = prompt('กรุณากรอกอีเมล:');
+              if (email) {
+                const role = prompt('กรุณาเลือกบทบาท (teacher/admin):') || 'teacher';
+                const password = prompt('กรุณากรอกรหัสผ่านเริ่มต้น:') || 'password';
+                
+                // TODO: เรียก API เพิ่มผู้ใช้จริง
+                alert(`เพิ่มผู้ใช้ "${fullName}" สำเร็จแล้ว!\nอีเมล: ${email}\nบทบาท: ${role}\nรหัสผ่าน: ${password}`);
+              }
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
+        >
           <Plus className="w-4 h-4" />
           <span>เพิ่มผู้ใช้</span>
         </button>
