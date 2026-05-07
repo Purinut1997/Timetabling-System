@@ -94,3 +94,34 @@
   - Converted homepage login/register actions to open popup instead of redirecting to standalone pages.
   - Connected popup login/register forms to live API endpoints with role-based redirect after login.
 - Enhanced popup visuals to modern futuristic glass style with tab switching, neon accents, blur backdrop, and inline feedback states.
+
+## 2026-05-07
+- Added comprehensive school management system pages:
+  - `/schedule-management` - Detailed schedule management with grid view, filters, and CRUD operations
+  - `/class-management` - Classroom and student management with building/floor organization
+  - `/subject-management` - Subject and curriculum management with credit hours and grade levels
+  - `/student-management` - Complete student enrollment and profile management
+- Created local development API routes in `src/app/api/`:
+  - `login/route.ts` - Mock authentication with demo users
+  - `register/route.ts` - Teacher registration with school assignment
+  - `profile/route.ts` - User profile retrieval with JWT verification
+  - `schools/route.ts` - School listing for registration dropdown
+  - `public-content/route.ts` - Public announcements and statistics
+  - `admin/users/route.ts` - Full user CRUD with role management (Super Admin only)
+- Added `DEMO_USERS.md` documentation with sample credentials for all user roles:
+  - Super Admin: admin@gmail.com / admin
+  - School Admin: schooladmin@gmail.com / schooladmin123
+  - Teacher: teacher@gmail.com / teacher123
+- Created Super Admin user management page at `/super-dashboard/users`:
+  - View all users with role and status filters
+  - Create new users with selectable roles (teacher/school_admin/super_admin)
+  - Edit user roles and status
+  - Delete users with confirmation
+  - School assignment for school_admin and teacher roles
+- Added TypeScript type definitions for jsonwebtoken in `src/types/jsonwebtoken.d.ts`
+- Updated `next.config.ts` with:
+  - Rewrites for Netlify Functions compatibility in local dev
+  - allowedDevOrigins for cross-origin requests during development
+- Refined UI text in `src/app/teacher-dashboard/substitute-page.tsx` for consistency
+- Updated `SUPER_DASHBOARD_GUIDE.md` with corrected terminology
+- Committed all changes to GitHub with comprehensive commit message documenting all new features
