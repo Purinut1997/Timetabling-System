@@ -195,6 +195,32 @@ export default function SuperDashboardPage() {
 
 // Component for Schools Management
 function SchoolsManagement() {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    address: '',
+    contact_email: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await schoolsAPI.create(formData);
+      setMessage(`เพิ่มโรงเรียน "${formData.name}" สำเร็จแล้ว!`);
+      setFormData({ name: '', address: '', contact_email: '' });
+      setShowAddForm(false);
+    } catch (error) {
+      setMessage(`เกิดข้อผิดพลาด: ${error instanceof Error ? error.message : 'ไม่สามารถเพิ่มโรงเรียนได้'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -207,25 +233,80 @@ function SchoolsManagement() {
           />
         </div>
         <button 
-          onClick={() => {
-            // สร้าง popup หรือ form สำหรับเพิ่มโรงเรียน
-            const schoolName = prompt('กรุณากรอกชื่อโรงเรียน:');
-            if (schoolName) {
-              const address = prompt('กรุณากรอกที่อยู่:') || '';
-              const contactEmail = prompt('กรุณากรอกอีเมลติดต่อ:') || '';
-              
-              if (contactEmail) {
-                // TODO: เรียก API เพิ่มโรงเรียนจริง
-                alert(`เพิ่มโรงเรียน "${schoolName}" สำเร็จแล้ว!\nที่อยู่: ${address}\nอีเมล: ${contactEmail}`);
-              }
-            }
-          }}
+          onClick={() => setShowAddForm(true)}
           className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>เพิ่มโรงเรียน</span>
         </button>
       </div>
+
+      {showAddForm && (
+        <GlassCard title="เพิ่มโรงเรียนใหม่">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อโรงเรียน *</label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกชื่อโรงเรียน"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">ที่อยู่ *</label>
+              <input
+                type="text"
+                required
+                value={formData.address}
+                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกที่อยู่"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">อีเมลติดต่อ *</label>
+              <input
+                type="email"
+                required
+                value={formData.contact_email}
+                onChange={(e) => setFormData({...formData, contact_email: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกอีเมลติดต่อ"
+              />
+            </div>
+            
+            {message && (
+              <div className={`p-3 rounded-lg text-sm ${
+                message.includes('สำเร็จ') 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
+              }`}>
+                {message}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                ยกเลิก
+              </button>
+            </div>
+          </form>
+        </GlassCard>
+      )}
       
       <div className="grid gap-3">
         {/* TODO: Add schools list */}
@@ -241,6 +322,34 @@ function SchoolsManagement() {
 
 // Component for Users Management
 function UsersManagement() {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: '',
+    email: '',
+    password: '',
+    role: 'teacher',
+    school_id: 1 // Default school ID - should be dynamic
+  });
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await usersAPI.create(formData);
+      setMessage(`เพิ่มผู้ใช้ "${formData.full_name}" สำเร็จแล้ว!`);
+      setFormData({ full_name: '', email: '', password: '', role: 'teacher', school_id: 1 });
+      setShowAddForm(false);
+    } catch (error) {
+      setMessage(`เกิดข้อผิดพลาด: ${error instanceof Error ? error.message : 'ไม่สามารถเพิ่มผู้ใช้ได้'}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2">
@@ -257,26 +366,103 @@ function UsersManagement() {
           <span>กรอง</span>
         </button>
         <button 
-          onClick={() => {
-            // สร้าง popup หรือ form สำหรับเพิ่มผู้ใช้
-            const fullName = prompt('กรุณากรอกชื่อ-นามสกุล:');
-            if (fullName) {
-              const email = prompt('กรุณากรอกอีเมล:');
-              if (email) {
-                const role = prompt('กรุณาเลือกบทบาท (teacher/admin):') || 'teacher';
-                const password = prompt('กรุณากรอกรหัสผ่านเริ่มต้น:') || 'password';
-                
-                // TODO: เรียก API เพิ่มผู้ใช้จริง
-                alert(`เพิ่มผู้ใช้ "${fullName}" สำเร็จแล้ว!\nอีเมล: ${email}\nบทบาท: ${role}\nรหัสผ่าน: ${password}`);
-              }
-            }
-          }}
+          onClick={() => setShowAddForm(true)}
           className="flex items-center gap-2 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors"
         >
           <Plus className="w-4 h-4" />
           <span>เพิ่มผู้ใช้</span>
         </button>
       </div>
+
+      {showAddForm && (
+        <GlassCard title="เพิ่มผู้ใช้ใหม่">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">ชื่อ-นามสกุล *</label>
+              <input
+                type="text"
+                required
+                value={formData.full_name}
+                onChange={(e) => setFormData({...formData, full_name: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกชื่อ-นามสกุล"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">อีเมล *</label>
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกอีเมล"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">รหัสผ่าน *</label>
+              <input
+                type="password"
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({...formData, password: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:border-cyan-500"
+                placeholder="กรุณากรอกรหัสผ่าน"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">บทบาท *</label>
+              <select
+                value={formData.role}
+                onChange={(e) => setFormData({...formData, role: e.target.value})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+              >
+                <option value="teacher">ครู</option>
+                <option value="school_admin">ผู้ดูแลโรงเรียน</option>
+                <option value="super_admin">Super Admin</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">โรงเรียน *</label>
+              <select
+                value={formData.school_id}
+                onChange={(e) => setFormData({...formData, school_id: parseInt(e.target.value)})}
+                className="w-full px-4 py-2 bg-slate-800/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
+              >
+                <option value={1}>Default Demo School</option>
+                {/* TODO: Load schools from API */}
+              </select>
+            </div>
+            
+            {message && (
+              <div className={`p-3 rounded-lg text-sm ${
+                message.includes('สำเร็จ') 
+                  ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                  : 'bg-red-500/20 text-red-400 border border-red-500/30'
+              }`}>
+                {message}
+              </div>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                disabled={loading}
+                className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'กำลังบันทึก...' : 'บันทึก'}
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowAddForm(false)}
+                className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                ยกเลิก
+              </button>
+            </div>
+          </form>
+        </GlassCard>
+      )}
       
       <div className="grid gap-3">
         {/* TODO: Add users list */}
